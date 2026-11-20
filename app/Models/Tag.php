@@ -14,12 +14,9 @@ class Tag extends Model
         'tag_kind',
     ];
 
-    public function classifiedCases(): BelongsToMany
+    public function classifiedCases()
     {
-        return $this->belongsToMany(
-            MysteryCase::class,
-            'case_tags'
-        );
+        return $this->belongsToMany(MysteryCase::class, 'case_tags', 'tag_id', 'case_id');
     }
 
     public function verificationCases(): HasMany

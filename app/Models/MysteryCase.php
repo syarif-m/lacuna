@@ -52,12 +52,15 @@ class MysteryCase extends Model
         );
     }
 
-    public function tags(): BelongsToMany
+        public function tags()
     {
-        return $this->belongsToMany(
-            Tag::class,
-            'case_tags'
-        );
+        return $this->belongsToMany(Tag::class, 'case_tags', 'case_id', 'tag_id');
+    }
+
+    public function sources()
+    {
+        return $this->belongsToMany(Source::class, 'case_sources', 'case_id', 'source_id')
+            ->withPivot('relevance_note');
     }
 
     public function images(): HasMany
@@ -65,13 +68,6 @@ class MysteryCase extends Model
         return $this->hasMany(CaseImage::class, 'case_id');
     }
 
-    public function sources(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Source::class,
-            'case_sources'
-        )->withPivot('relevance_note');
-    }
 
     public function theories(): HasMany
     {
