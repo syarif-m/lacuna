@@ -4,19 +4,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DiscoverController;
+use App\Http\Controllers\CaseDetailController;
+use App\Http\Controllers\Member\CaseSubmissionController;
 
 // Public
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
 
- Route::get('/discover', function () {
-    return view('discover');
-        })->name('discover');
+Route::get('/discover', [DiscoverController::class, 'index'])
+    ->name('discover');
 
-    Route::get('/about', function () {
+Route::get('/about', function () {
     return view('about');
         })->name('about');
+
+Route::get('/cases/{slug}', [CaseDetailController::class, 'show'])
+    ->name('cases.show');
 
 // Guest only
 Route::middleware('guest')->group(function () {
@@ -46,8 +51,13 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/dashboard', [MemberDashboardController::class, 'index'])
                 ->name('dashboard');
-        });
+            Route::get('/cases/create', [CaseSubmissionController::class, 'create'])
+                ->name('cases.create');
+            Route::post('/cases', [CaseSubmissionController::class, 'store'])
+                ->name('cases.store');
 
+            
+        });
     // Admin
     Route::middleware('role:ADMIN')
         ->prefix('admin')
